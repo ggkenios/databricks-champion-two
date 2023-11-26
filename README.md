@@ -3,7 +3,7 @@
 ## CI/CD
 | | |
 | --- | --- |
-| Backend | [![CI - Test](https://github.com/ggkenios/databricks-champion/actions/workflows/cicd.yml/badge.svg)](https://github.com/ggkenios/databricks-champion/actions/workflows/backend.yml) |
+| Backend | [![CI - Test](https://github.com/ggkenios/databricks-champion-two/actions/workflows/cicd.yml/badge.svg)](https://github.com/ggkenios/databricks-champion-two/actions/workflows/backend.yml) |
 <br>
 
 ## Table of Contents
