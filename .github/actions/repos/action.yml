@@ -12,9 +12,12 @@ inputs:
   repo_url:
     required: true
     description: "The URL of the git repository to import"
-  branch:
+  branch_or_tag:
     required: true
     description: "The branch to import. If not specified, the default branch will be used"
+  type_of_trigger:
+    required: true
+    description: "The type of trigger to use. If not specified, the default trigger will be used"
   databricks_path:
     required: true
     description: "The path in Databricks where the repository should be imported"
@@ -48,13 +51,12 @@ runs:
                     json={"path": path},
                 )
                 response.raise_for_status()
-                return
 
             def create_repo(self,
                 repo_url: str,
                 databricks_path: str,
                 provider: str = "gitHub",
-            ) -> None:
+            ) -> int:
                 """Copies a Repo from your git provider to Databricks."""
                 response = requests.post(
                     url=f"{self.databricks_url}/api/2.0/repos",
@@ -66,7 +68,7 @@ runs:
                     }
                 )
                 response.raise_for_status()
-                return
+                return response.json()["id"]
 
             def update_repo(self,
                 repo_id: str,
@@ -87,7 +89,6 @@ runs:
                     json=request_json,
                 )
                 response.raise_for_status()
-                return
 
             def get_repo_id(self,
                 databricks_path: str
@@ -114,17 +115,17 @@ runs:
                 """Creates or updates a Databricks Repo"""
                 id = self.get_repo_id(databricks_path)
 
-                if id:
-                    self.update_repo(id, branch, tag)
-                    print("Repo updated.")
-                else:
+                if not id:
                     try:
-                        self.create_repo(repo_url, databricks_path, provider)
+                        id = self.create_repo(repo_url, databricks_path, provider)
                     except requests.exceptions.HTTPError:
                         dir_to_create = "/".join(databricks_path.split("/")[:-1])
                         self.create_directory(dir_to_create)
-                        self.create_repo(repo_url, databricks_path, provider)
+                        id = self.create_repo(repo_url, databricks_path, provider)
                     print("Repo created.")
+
+                self.update_repo(id, branch, tag)
+                print("Repo updated.")
 
 
         DatabricksRepos(
@@ -133,6 +134,6 @@ runs:
         ).create_or_update_repo(
             repo_url = "${{ inputs.repo_url }}",
             databricks_path = "${{ inputs.databricks_path }}",
-            branch = "${{ inputs.branch }}",
+            ${{ inputs.type_of_trigger }} = "${{ inputs.branch_or_tag }}",
         )
         '
