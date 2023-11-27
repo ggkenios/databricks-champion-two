@@ -53,7 +53,7 @@ jobs:
         type_of_trigger: ${{ github.ref_type }}
 
     - name: Unit Test - Workflows
-      if: ${{ env.UNIT_TEST }}
+      if: ${{ env.UNIT_TEST == 'true' }}
       uses: ./.github/actions/jobs
       with:
         databricks_host: ${{ env.DATABRICKS_HOST }}
@@ -65,7 +65,7 @@ jobs:
         cluster_config_path: ${{ env.UNIT_TEST_DIR }}/${{ env.CLUSTER_CONFIG_FILE }}
 
     - name: Integration Test - Workflows
-      if: ${{ !env.INTEGRATION_TEST_WITH_DLT && env.INTEGRATION_TEST }}
+      if: ${{ env.INTEGRATION_TEST_WITH_DLT != 'true' && env.INTEGRATION_TEST == 'true' }}
       uses: ./.github/actions/jobs
       with:
         databricks_host: ${{ env.DATABRICKS_HOST }}
@@ -77,7 +77,7 @@ jobs:
         cluster_config_path: ${{ env.INTEGRATION_TEST_DIR }}/${{ env.CLUSTER_CONFIG_FILE }}
   
     - name: Integration Test - DLT
-      if: ${{ env.INTEGRATION_TEST_WITH_DLT && env.INTEGRATION_TEST }}
+      if: ${{ env.INTEGRATION_TEST_WITH_DLT == 'true' && env.INTEGRATION_TEST == 'true' }}
       uses: ./.github/actions/dlt
       with:
         databricks_host: ${{ env.DATABRICKS_HOST }}
