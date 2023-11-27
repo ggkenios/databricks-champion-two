@@ -57,7 +57,7 @@ jobs:
         databricks_token: ${{ env.DATABRICKS_TOKEN }}
         databricks_path: /Repos/${{ steps.path.outputs.REPO_PATH }}/${{ github.event.repository.name }}
         name: "Testing: ${{ github.event.repository.name }} | ${{ github.ref_name }}"
-        folder_path: ${{ env.INTEGRATION_TEST_DIR }}
+        folder_path: ${{ env.UNIT_TEST_DIR }}
         requirements_path: ${{ env.REQUIREMENTS_PATH }}
         cluster_config_path: ${{ env.CLUSTER_CONFIG_PATH }}
 
