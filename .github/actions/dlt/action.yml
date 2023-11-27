@@ -39,6 +39,7 @@ runs:
         import requests
         import json
         import time
+        import os
 
 
         class DatabricksDLT:
@@ -134,21 +135,19 @@ runs:
             ) -> str:
                 """Creates a directory in Databricks."""
                 pipeline_id = self.create_pipeline(
-                    name="Integration Test: databricks-champion-two | dev",
-                    databricks_file_path="/Repos/dev/databricks-champion/tests/integration_test",
-                    cluster_config_path="tests/cluster.json"
+                    name=name,
+                    databricks_file_path=databricks_file_path,
+                    cluster_config_path=cluster_config_path
                 )
 
                 if not pipeline_id:
-                    pipeline_id = self.get_pipeline(
-                        name="Integration Test: databricks-champion-two | dev"
-                    )
+                    pipeline_id = self.get_pipeline(name=name)
                     
                     self.update_pipeline(
                         pipeline_id=pipeline_id,
-                        name="Integration Test: databricks-champion-two | dev",
-                        databricks_file_path="/Repos/dev/databricks-champion/tests/integration_test",
-                        cluster_config_path="tests/cluster.json"
+                        name=name,
+                        databricks_file_path=databricks_file_path,
+                        cluster_config_path=cluster_config_path,
                     )
                 return pipeline_id
 
