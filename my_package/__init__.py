@@ -1,12 +1,11 @@
-from .code import generate_data1, generate_data2, upper_columns, lower_columns
+from .code import add_missing_columns, columns_except, dataframe_except_columns
 from .databricks import display, spark
 
 
 __all__ = [
-    "generate_data1",
-    "generate_data2",
-    "upper_columns",
-    "lower_columns",
+    "add_missing_columns",
+    "columns_except",
+    "dataframe_except_columns",
     "display",
     "spark",
 ]
