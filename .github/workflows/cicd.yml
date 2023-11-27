@@ -21,6 +21,8 @@ env:
   REQUIREMENTS_FILE: requirements.txt
   CLUSTER_CONFIG_FILE: cluster.json
   # Booleans for running tests
+  UNIT_TEST: false
+  INTEGRATION_TEST: true
   INTEGRATION_TEST_WITH_DLT: true
 
 
@@ -40,17 +42,18 @@ jobs:
           echo REPO_PATH=${{ env.DATABRICKS_REPO_PATH_DEVELOPMENT }} >> $GITHUB_OUTPUT
         fi
 
-    # - name: Create or Update Databricks Repo
-    #   uses: ./.github/actions/repos
-    #   with:
-    #     databricks_host: ${{ env.DATABRICKS_HOST }}
-    #     databricks_token: ${{ env.DATABRICKS_TOKEN }}
-    #     databricks_path: /Repos/${{ steps.path.outputs.REPO_PATH }}/${{ github.event.repository.name }}
-    #     repo_url:  ${{ github.event.repository.url }}
-    #     branch_or_tag: ${{ github.ref_name }}
-    #     type_of_trigger: ${{ github.ref_type }}
+    - name: Create or Update Databricks Repo
+      uses: ./.github/actions/repos
+      with:
+        databricks_host: ${{ env.DATABRICKS_HOST }}
+        databricks_token: ${{ env.DATABRICKS_TOKEN }}
+        databricks_path: /Repos/${{ steps.path.outputs.REPO_PATH }}/${{ github.event.repository.name }}
+        repo_url:  ${{ github.event.repository.url }}
+        branch_or_tag: ${{ github.ref_name }}
+        type_of_trigger: ${{ github.ref_type }}
 
     - name: Unit Test - Workflows
+      if: ${{ env.UNIT_TEST == 'true' }}
       uses: ./.github/actions/jobs
       with:
         databricks_host: ${{ env.DATABRICKS_HOST }}
@@ -62,7 +65,7 @@ jobs:
         cluster_config_path: "${{ env.UNIT_TEST_DIR }}/${{ env.CLUSTER_CONFIG_FILE }}"
 
     - name: Integration Test - Workflows
-      if: ${{ env.INTEGRATION_TEST_WITH_DLT != 'true' }}
+      if: ${{ env.INTEGRATION_TEST_WITH_DLT != 'true' }} && ${{ env.INTEGRATION_TEST == 'true' }}
       uses: ./.github/actions/jobs
       with:
         databricks_host: ${{ env.DATABRICKS_HOST }}
@@ -74,7 +77,7 @@ jobs:
         cluster_config_path: "${{ env.INTEGRATION_TEST_DIR }}/${{ env.CLUSTER_CONFIG_FILE }}"
   
     - name: Integration Test - DLT
-      if: ${{ env.INTEGRATION_TEST_WITH_DLT == 'true' }}
+      if: ${{ env.INTEGRATION_TEST_WITH_DLT == 'true' }} && ${{ env.INTEGRATION_TEST == 'true' }}
       uses: ./.github/actions/dlt
       with:
         databricks_host: ${{ env.DATABRICKS_HOST }}
