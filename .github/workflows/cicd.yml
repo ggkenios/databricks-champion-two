@@ -77,7 +77,7 @@ jobs:
         cluster_config_path: "${{ env.INTEGRATION_TEST_DIR }}/${{ env.CLUSTER_CONFIG_FILE }}"
   
     - name: Integration Test - DLT
-      if: ${{ env.INTEGRATION_TEST_WITH_DLT == 'true' && env.INTEGRATION_TEST == 'true' }}
+      if: ${{ env.INTEGRATION_TEST_WITH_DLT && env.INTEGRATION_TEST }}
       uses: ./.github/actions/dlt
       with:
         databricks_host: ${{ env.DATABRICKS_HOST }}
