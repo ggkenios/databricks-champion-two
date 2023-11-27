@@ -21,7 +21,7 @@ env:
   REQUIREMENTS_FILE: requirements.txt
   CLUSTER_CONFIG_FILE: cluster.json
   # Booleans for running tests
-  UNIT_TEST: false
+  UNIT_TEST: true
   INTEGRATION_TEST: true
   INTEGRATION_TEST_WITH_DLT: true
 
