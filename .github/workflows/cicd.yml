@@ -72,7 +72,7 @@ jobs:
         databricks_token: ${{ env.DATABRICKS_TOKEN }}
         databricks_path: /Repos/${{ steps.path.outputs.REPO_PATH }}/${{ github.event.repository.name }}
         name: "Testing: ${{ github.event.repository.name }} | ${{ github.ref_name }}"
-        folder_path: ${{ env.INTEGRATION_TEST_DIR }}/${{ steps.path.outputs.REPO_PATH }}
+        folder_path: ${{ env.INTEGRATION_TEST_DIR }}
         requirements_path: ${{ env.INTEGRATION_TEST_DIR }}/${{ env.REQUIREMENTS_FILE }}
         cluster_config_path: ${{ env.INTEGRATION_TEST_DIR }}/${{ env.CLUSTER_CONFIG_FILE }}
   
@@ -84,7 +84,7 @@ jobs:
         databricks_token: ${{ env.DATABRICKS_TOKEN }}
         databricks_path: /Repos/${{ steps.path.outputs.REPO_PATH }}/${{ github.event.repository.name }}
         name: "Testing: ${{ github.event.repository.name }} | ${{ github.ref_name }}"
-        folder_path: ${{ env.INTEGRATION_TEST_DIR }}/${{ steps.path.outputs.REPO_PATH }}
+        folder_path: ${{ env.INTEGRATION_TEST_DIR }}
         cluster_config_path: ${{ env.INTEGRATION_TEST_DIR }}/${{ env.CLUSTER_CONFIG_FILE }}
 
   Release:
