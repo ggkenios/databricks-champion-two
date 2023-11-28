@@ -1,5 +1,5 @@
 # Databricks notebook source
-from my_package.code import columns_except
+from my_package import columns_except, spark
 import dlt
 
 # COMMAND ----------
