@@ -1,56 +1,37 @@
 # Databricks notebook source
 from runtime.nutterfixture import NutterFixture
-from chispa import assert_df_equality
+from chispa.dataframe_comparer import assert_df_equality
 
 from my_package import (
-    generate_data1,
-    generate_data2,
-    upper_columns,
-    spark,
+   add_missing_columns,
+   columns_except,
+   dataframe_except_columns,
+   spark
 )
 
 
-TABLE_NAME_1 = "my_cool_data"
-TABLE_NAME_2 = "my_data"
-COUNT_1 = 100
-COUNT_2 = 10
-
-
 class UnitTest(NutterFixture):
-    def __init__(self):
-        self.table_name_1 = TABLE_NAME_1
-        self.table_name_2 = TABLE_NAME_2
-        self.count_1 = COUNT_1
-        self.count_2 = COUNT_2
-        NutterFixture.__init__(self)
-
-    def run_code1_percent_run(self):
-        generate_data1(
-            spark=spark,
-            table_name=self.table_name_1,
-            n=self.count_1,
-        )
-
-    def assertion_code1_percent_run(self):
-        df = spark.read.table(self.table_name_1)
-        assert df.count() == self.count_1
-
-    def run_code2_percent_run(self):
-        generate_data2(spark=spark, table_name=self.table_name_2)
-
-    def assertion_code2_percent_run(self):
-        df = spark.sql(f"SELECT COUNT(*) AS total FROM {self.table_name_2}")
-        assert df.first()[0] == self.count_2
-
-    def after_code2_percent_run(self):
-        spark.sql(f"DROP TABLE {self.table_name_2}")
-
-    def assertion_upper_columns_percent_run(self):
-        cols = ["col1", "col2", "col3"]
-        df = spark.createDataFrame([("abc", "cef", 1)], cols)
-        upper_df = upper_columns(df, cols)
-        expected_df = spark.createDataFrame([("ABC", "CEF", 1)], cols)
-        assert_df_equality(upper_df, expected_df)
+  def __init__(self):
+    super().__init__()
+    
+  def assertion_columns_except(self):
+    original_df = spark.createDataFrame([[1, 2, 3, 4]], schema="col1 int, col2 int, col3 int, col4 int")
+    new_cols = columns_except(original_df, ["col2", "col4"])
+    assert new_cols == ["col1", "col3"]
+    
+  def assertion_dataframe_except_columns(self):
+    original_df = spark.createDataFrame(
+        [[1, 2, 3, 4]], schema="col1 int, col2 int, col3 int, col4 int")
+    new_df = dataframe_except_columns(original_df, ["col2", "col4"])
+    expected_df = spark.createDataFrame([[1, 3]], schema="col1 int, col3 int")
+    assert_df_equality(new_df, expected_df, ignore_nullable=True)
+  
+  def assertion_add_missing_columns(self):
+    df1 = spark.createDataFrame([[1, 2]], schema="col1 int, col2 int")
+    df2 = spark.createDataFrame([[1, "2", 3.0]], schema="col1 int, col4 string, col5 double")
+    new_df = add_missing_columns(df1, df2)
+    expected_df = spark.createDataFrame([[1, 2, None, None]], schema="col1 int, col2 int, col4 string, col5 double")
+    assert_df_equality(new_df, expected_df, ignore_nullable=True)
 
 
 if __name__ == "__main__":
