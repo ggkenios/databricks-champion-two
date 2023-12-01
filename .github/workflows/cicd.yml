@@ -48,7 +48,7 @@ jobs:
         databricks_host: ${{ env.DATABRICKS_HOST }}
         databricks_token: ${{ env.DATABRICKS_TOKEN }}
         databricks_path: /Repos/${{ steps.path.outputs.REPO_PATH }}/${{ github.event.repository.name }}
-        repo_url:  ${{ github.event.repository.url }}
+        repo_url:  https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
         branch_or_tag: ${{ github.ref_name }}
         type_of_trigger: ${{ github.ref_type }}
 
@@ -98,6 +98,6 @@ jobs:
         databricks_host: ${{ env.DATABRICKS_HOST }}
         databricks_token: ${{ env.DATABRICKS_TOKEN }}
         databricks_path: /Repos/${{ env.DATABRICKS_REPO_PATH_PRODUCTION }}/${{ github.event.repository.name }}
-        repo_url:  ${{ github.event.repository.url }}
+        repo_url:  https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
         branch_or_tag: ${{ github.ref_name }}
         type_of_trigger: ${{ github.ref_type }}
